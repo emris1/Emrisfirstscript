@@ -36,7 +36,7 @@ Name = <string> - The name of the section.
 
 OrionLib:MakeNotification({
 	Name = "success",
-	Content = "successfully activated also made by emris",
+	Content = "successfully activated made by emris and any script that says its for someone is credited",
 	Image = "rbxassetid://4483345998",
 	Time = 5
 })
@@ -270,4 +270,16 @@ ESP.whatever = true
 
   	end    
 })
+
+MainTab:AddButton({
+	Name = "alwi hub (for pyro)",
+	Callback = function()
+      		loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-free-gamepass-or-dev-products-12996"))()
+  	end    
+})
+
+--[[
+Name = <string> - The name of the button.
+Callback = <function> - The function of the button.
+]]
 
