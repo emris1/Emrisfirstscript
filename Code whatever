@@ -1,0 +1,273 @@
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+
+local Window = OrionLib:MakeWindow({Name = "oil up", HidePremium = false, SaveConfig = true, ConfigFolder = "OrionTest"})
+
+--[[
+Name = <string> - The name of the UI.
+HidePremium = <bool> - Whether or not the user details shows Premium status or not.
+SaveConfig = <bool> - Toggles the config saving in the UI.
+ConfigFolder = <string> - The name of the folder where the configs are saved.
+IntroEnabled = <bool> - Whether or not to show the intro animation.
+IntroText = <string> - Text to show in the intro animation.
+IntroIcon = <string> - URL to the image you want to use in the intro animation.
+Icon = <string> - URL to the image you want displayed on the window.
+CloseCallback = <function> - Function to execute when the window is closed.
+]]
+
+local MainTab = Window:MakeTab({
+	Name = "Home",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
+--[[
+Name = <string> - The name of the tab.
+Icon = <string> - The icon of the tab.
+PremiumOnly = <bool> - Makes the tab accessible to Sirus Premium users only.
+]]
+
+local MainSection = MainTab:AddSection({
+	Name = "Main"
+})
+
+--[[
+Name = <string> - The name of the section.
+]]
+
+OrionLib:MakeNotification({
+	Name = "success",
+	Content = "successfully activated",
+	Image = "rbxassetid://4483345998",
+	Time = 5
+})
+
+--[[
+Title = <string> - The title of the notification.
+Content = <string> - The content of the notification.
+Image = <string> - The icon of the notification.
+Time = <number> - The duration of the notfication.
+]]
+
+MainTab:AddButton({
+	Name = "Inf jump",
+	Callback = function()
+local InfiniteJumpEnabled = true
+game:GetService("UserInputService").JumpRequest:connect(function()
+	if InfiniteJumpEnabled then
+		game:GetService"Players".LocalPlayer.Character:FindFirstChildOfClass'Humanoid':ChangeState("Jumping")
+	end
+end)
+  	end    
+})
+
+--[[
+Name = <string> - The name of the button.
+Callback = <function> - The function of the button.
+]]
+
+MainTab:AddToggle({
+	Name = "anti fling",
+	Default = false,
+	Callback = function()
+		if not game:IsLoaded() then
+	game.IsLoaded:Wait()
+end;
+
+local Players = game:service("Players")
+local LocalPlayer = Players.LocalPlayer
+
+if not LocalPlayer.Character then
+	repeat task.wait() until LocalPlayer.Character
+end;
+
+local CheckInstance = function(Part)
+	if Part.ClassName:lower():find("part") then
+		local BaseInstance = Part;
+		pcall(function()
+			for i, Part in pairs(LocalPlayer.Character:GetDescendants()) do
+				if Part.ClassName:lower():find("part") then
+					local NoCollisionConstraint = Instance.new("NoCollisionConstraint", BaseInstance)
+					NoCollisionConstraint.Enabled = true
+					NoCollisionConstraint.Part0 = BaseInstance;
+					NoCollisionConstraint.Part1 = Part;
+				end
+			end
+		end)
+	end
+end;
+
+local Insert = function(Target, Bool)
+	local Start = function()
+		local Inserted = {}
+		if not Target.Character then
+			Target.CharacterAdded:Wait()
+		end;
+		Target.Character:WaitForChild("Head", 5)
+		Target.Character:WaitForChild("Humanoid", 5)
+		spawn(function()
+			pcall(function()
+				for i, v in pairs(Target.Character:GetDescendants()) do
+					if v:IsA("NoCollisionConstraint") then
+						v:Destroy()
+					end
+				end;
+				for i, v in pairs(Target.Character:GetDescendants()) do
+					CheckInstance(v)
+				end;
+				Target.Character.DescendantAdded:Connect(function(v)
+					if not table.find(Inserted, v) then
+						table.insert(Inserted, v)
+						CheckInstance(v)
+					end
+				end)
+			end)
+		end)
+	end;
+	pcall(Start)
+	if not Bool then
+		Target.CharacterAdded:Connect(Start)
+	end
+end;
+
+for i, v in pairs(Players:GetPlayers()) do
+	if v ~= LocalPlayer then
+		Insert(v, false)
+	end
+end;
+
+Players.PlayerAdded:Connect(Insert, false)
+
+local Reset = function()
+	if not LocalPlayer.Character then
+		LocalPlayer.CharacterAdded:Wait()
+	end;
+	LocalPlayer.Character:WaitForChild("Head")
+	LocalPlayer.Character:WaitForChild("Humanoid")
+	for i, v in pairs(Players:GetPlayers()) do
+		if v ~= LocalPlayer then
+			pcall(function()
+				for i, v in pairs(v.Character:GetDescendants()) do
+					if v.IsA(v, "NoCollisionConstraint") then
+						v:Destroy()
+					end
+				end
+			end)
+			Insert(v, true)
+		end
+	end
+end;
+
+LocalPlayer.CharacterAdded:Connect(Reset)
+	end    
+})
+
+--[[
+Name = <string> - The name of the toggle.
+Default = <bool> - The default value of the toggle.
+Callback = <function> - The function of the toggle.
+]]
+
+MainTab:AddButton({
+	Name = "fly",
+	Callback = function()
+      		--ARCEUS X FLY V2 SCRIPT
+loadstring("\108\111\97\100\115\116\114\105\110\103\40\103\97\109\101\58\72\116\116\112\71\101\116\40\40\39\104\116\116\112\115\58\47\47\103\105\115\116\46\103\105\116\104\117\98\117\115\101\114\99\111\110\116\101\110\116\46\99\111\109\47\109\101\111\122\111\110\101\89\84\47\98\102\48\51\55\100\102\102\57\102\48\97\55\48\48\49\55\51\48\52\100\100\100\54\55\102\100\99\100\51\55\48\47\114\97\119\47\101\49\52\101\55\52\102\52\50\53\98\48\54\48\100\102\53\50\51\51\52\51\99\102\51\48\98\55\56\55\48\55\52\101\98\51\99\53\100\50\47\97\114\99\101\117\115\37\50\53\50\48\120\37\50\53\50\48\102\108\121\37\50\53\50\48\50\37\50\53\50\48\111\98\102\108\117\99\97\116\111\114\39\41\44\116\114\117\101\41\41\40\41\10\10")()
+  	end    
+})
+
+--[[
+Name = <string> - The name of the button.
+Callback = <function> - The function of the button.
+]]
+
+MainTab:AddButton({
+	Name = "jaunko",
+	Callback = function()
+      		loadstring(game:HttpGet("https://raw.githubusercontent.com/Juanko-Scripts/Roblox-scripts/main/obf_Aap505JEHIsk17sO35Bk3LZ8d5snZew1oZNGx562xEUCHStdgQl3e122qkC0HR3a.lua.txt"))()
+  	end    
+})
+
+--[[
+Name = <string> - The name of the button.
+Callback = <function> - The function of the button.
+]]
+
+MainTab:AddButton({
+	Name = "yarhma hub",
+	Callback = function()
+      		loadstring(game:HttpGet("https://raw.githubusercontent.com/Joystickplays/psychic-octo-invention/main/yarhm.lua", false))()
+  	end    
+})
+
+--[[
+Name = <string> - The name of the button.
+Callback = <function> - The function of the button.
+]]
+
+MainTab:AddButton({
+	Name = "ScriptHubV3 Too good",
+	Callback = function()
+      		loadstring(game:HttpGet("https://raw.githubusercontent.com/scripthubekitten/SCRIPTHUBV3/main/SCRIPTHUBV3", true))()
+  	end    
+})
+
+--[[
+Name = <string> - The name of the button.
+Callback = <function> - The function of the button.
+]]
+
+MainTab:AddButton({
+	Name = "personal made esp",
+	Callback = function()
+      		-- loadstring
+local ESP = loadstring(game:HttpGet("https://kiriot22.com/releases/ESP.lua"))()
+ 
+-- config
+ESP.Players = false
+ESP.Boxes = false
+ESP.Names = true
+ESP:Toggle(true)
+ 
+-- object
+ESP:AddObjectListener(Workspace .DynamicFurniture, {
+    Name = "ScrapPile",
+    CustomName = "scrap",
+    Color = Color3.fromRGB(0, 255, 0),
+    IsEnabled = "whatever"
+})
+ESP.whatever = true
+
+
+  	end    
+})
+
+--[[
+Name = <string> - The name of the button.
+Callback = <function> - The function of the button.
+]]
+
+MainTab:AddButton({
+	Name = "second esp",
+	Callback = function()
+      		-- loadstring
+local ESP = loadstring(game:HttpGet("https://kiriot22.com/releases/ESP.lua"))()
+ 
+-- config
+ESP.Players = false
+ESP.Boxes = false
+ESP.Names = true
+ESP:Toggle(true)
+ 
+-- object
+ESP:AddObjectListener(Workspace .DynamicFurniture, {
+    Name = "BottlePack",
+    CustomName = "bottlepack",
+    Color = Color3.fromRGB(0, 255, 0),
+    IsEnabled = "whatever"
+})
+ESP.whatever = true
+
+
+  	end    
+})
+
