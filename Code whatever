@@ -1,285 +1,293 @@
-local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+local ArrayField = loadstring(game:HttpGet("https://raw.githubusercontent.com/Hosvile/Refinement/main/MC%3AArrayfield%20Library"))()
+--Documentation url: https://docs.sirius.menu/community/arrayfield
 
-local Window = OrionLib:MakeWindow({Name = "oil up", HidePremium = false, SaveConfig = true, ConfigFolder = "OrionTest"})
+local Window = ArrayField:CreateWindow({
+        Name = "🖕Emris Hub🖕",
+        LoadingTitle = "Emris Hub Interface",
+        LoadingSubtitle = "by Emris",
+        ConfigurationSaving = {
+            Enabled = true,
+            FolderName = nil, -- Create a custom folder for your hub/game
+            FileName = "Emris"
+        },
+        Discord = {
+            Enabled = false,
+            Invite = "sirius", -- The Discord invite code, do not include discord.gg/
+            RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+        },
+        KeySystem = false, -- Set this to true to use our key system
+        KeySettings = {
+            Title = "Emris",
+            Subtitle = "Key System",
+            Note = nil,
+            FileName = "ArrayFieldsKeys",
+            SaveKey = false,
+            GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like ArrayField to get the key from
+            Key = {"Hello",'Bye'},
+            Actions = {
+                [1] = {
+                    Text = 'Click here to copy the key link',
+                    OnPress = function()
 
---[[
-Name = <string> - The name of the UI.
-HidePremium = <bool> - Whether or not the user details shows Premium status or not.
-SaveConfig = <bool> - Toggles the config saving in the UI.
-ConfigFolder = <string> - The name of the folder where the configs are saved.
-IntroEnabled = <bool> - Whether or not to show the intro animation.
-IntroText = <string> - Text to show in the intro animation.
-IntroIcon = <string> - URL to the image you want to use in the intro animation.
-Icon = <string> - URL to the image you want displayed on the window.
-CloseCallback = <function> - Function to execute when the window is closed.
-]]
+                    end,
+                }
+            },
+        }
+    })
 
-local MainTab = Window:MakeTab({
-	Name = "Home",
-	Icon = "rbxassetid://4483345998",
-	PremiumOnly = false
+local HomeTab = Window:CreateTab("Home", 4483362458) -- Title, Image
+local HomeSection = HomeTab:CreateSection("Whatever",false) -- The 2nd argument is to tell if its only a Title and doesnt contain element
+
+local MainTab = Window:CreateTab("Main", 4483362458) -- Title, Image
+local MainSection = MainTab:CreateSection("Basic",false) -- The 2nd argument is to tell if its only a Title and doesnt contain element
+
+local GuiTab = Window:CreateTab("Gui", 4483362458) -- Title, Image
+local GuiSection = GuiTab:CreateSection("Main",false) -- The 2nd argument is to tell if its only a Title and doesnt contain element
+
+local MadeTab = Window:CreateTab("Made", 4483362458) -- Title, Image
+local MadeSection = MadeTab:CreateSection("made by me",false) -- The 2nd argument is to tell if its only a Title and doesnt contain element
+
+ArrayField:Notify({
+   Title = "Activated",
+   Content = "made by emris",
+   Duration = 5,
+   Image = 4483362458,
+   Actions = { -- Notification Buttons
+      Ignore = {
+         Name = "press me hard",
+         Callback = function()
+         print("The user tapped press me hard")
+      end
+   },
+ },
 })
 
---[[
-Name = <string> - The name of the tab.
-Icon = <string> - The icon of the tab.
-PremiumOnly = <bool> - Makes the tab accessible to Sirus Premium users only.
-]]
-
-local MainSection = MainTab:AddSection({
-	Name = "Main"
+local Slider = MainTab:CreateSlider({
+   Name = "Speed",
+   Range = {0, 300},
+   Increment = 1,
+   Suffix = "speed",
+   CurrentValue = 16,
+   Flag = "Slider1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Value)
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = (Value)
+   end,
 })
 
---[[
-Name = <string> - The name of the section.
-]]
-
-OrionLib:MakeNotification({
-	Name = "success",
-	Content = "successfully activated made by emris and any script that says its for someone is credited",
-	Image = "rbxassetid://4483345998",
-	Time = 5
+local Slider = MainTab:CreateSlider({
+   Name = "jump power",
+   Range = {0, 300},
+   Increment = 1,
+   Suffix = "Jump",
+   CurrentValue = 10,
+   Flag = "Slider1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Value)
+        game.Players.LocalPlayer.Character.Humanoid.JumpPower = (Value)
+   end,
 })
 
---[[
-Title = <string> - The title of the notification.
-Content = <string> - The content of the notification.
-Image = <string> - The icon of the notification.
-Time = <number> - The duration of the notfication.
-]]
-
-MainTab:AddButton({
-	Name = "Inf jump",
-	Callback = function()
-local InfiniteJumpEnabled = true
+local Button = MainTab:CreateButton({
+   Name = "Inf jump",
+   Interact = 'Click',
+   Callback = function()
+        local InfiniteJumpEnabled = true
 game:GetService("UserInputService").JumpRequest:connect(function()
 	if InfiniteJumpEnabled then
 		game:GetService"Players".LocalPlayer.Character:FindFirstChildOfClass'Humanoid':ChangeState("Jumping")
 	end
 end)
-  	end    
+   end,
 })
 
---[[
-Name = <string> - The name of the button.
-Callback = <function> - The function of the button.
-]]
-
-MainTab:AddToggle({
-	Name = "anti fling",
-	Default = false,
-	Callback = function()
-		if not game:IsLoaded() then
-	game.IsLoaded:Wait()
-end;
-
-local Players = game:service("Players")
-local LocalPlayer = Players.LocalPlayer
-
-if not LocalPlayer.Character then
-	repeat task.wait() until LocalPlayer.Character
-end;
-
-local CheckInstance = function(Part)
-	if Part.ClassName:lower():find("part") then
-		local BaseInstance = Part;
-		pcall(function()
-			for i, Part in pairs(LocalPlayer.Character:GetDescendants()) do
-				if Part.ClassName:lower():find("part") then
-					local NoCollisionConstraint = Instance.new("NoCollisionConstraint", BaseInstance)
-					NoCollisionConstraint.Enabled = true
-					NoCollisionConstraint.Part0 = BaseInstance;
-					NoCollisionConstraint.Part1 = Part;
-				end
-			end
-		end)
-	end
-end;
-
-local Insert = function(Target, Bool)
-	local Start = function()
-		local Inserted = {}
-		if not Target.Character then
-			Target.CharacterAdded:Wait()
-		end;
-		Target.Character:WaitForChild("Head", 5)
-		Target.Character:WaitForChild("Humanoid", 5)
-		spawn(function()
-			pcall(function()
-				for i, v in pairs(Target.Character:GetDescendants()) do
-					if v:IsA("NoCollisionConstraint") then
-						v:Destroy()
-					end
-				end;
-				for i, v in pairs(Target.Character:GetDescendants()) do
-					CheckInstance(v)
-				end;
-				Target.Character.DescendantAdded:Connect(function(v)
-					if not table.find(Inserted, v) then
-						table.insert(Inserted, v)
-						CheckInstance(v)
-					end
-				end)
-			end)
-		end)
-	end;
-	pcall(Start)
-	if not Bool then
-		Target.CharacterAdded:Connect(Start)
-	end
-end;
-
-for i, v in pairs(Players:GetPlayers()) do
-	if v ~= LocalPlayer then
-		Insert(v, false)
-	end
-end;
-
-Players.PlayerAdded:Connect(Insert, false)
-
-local Reset = function()
-	if not LocalPlayer.Character then
-		LocalPlayer.CharacterAdded:Wait()
-	end;
-	LocalPlayer.Character:WaitForChild("Head")
-	LocalPlayer.Character:WaitForChild("Humanoid")
-	for i, v in pairs(Players:GetPlayers()) do
-		if v ~= LocalPlayer then
-			pcall(function()
-				for i, v in pairs(v.Character:GetDescendants()) do
-					if v.IsA(v, "NoCollisionConstraint") then
-						v:Destroy()
-					end
-				end
-			end)
-			Insert(v, true)
-		end
-	end
-end;
-
-LocalPlayer.CharacterAdded:Connect(Reset)
-	end    
+local Button = HomeTab:CreateButton({
+   Name = "infinty yield",
+   Interact = 'Click',
+   Callback = function()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+   end,
 })
 
---[[
-Name = <string> - The name of the toggle.
-Default = <bool> - The default value of the toggle.
-Callback = <function> - The function of the toggle.
-]]
-
-MainTab:AddButton({
-	Name = "fly",
-	Callback = function()
-      		--ARCEUS X FLY V2 SCRIPT
-loadstring("\108\111\97\100\115\116\114\105\110\103\40\103\97\109\101\58\72\116\116\112\71\101\116\40\40\39\104\116\116\112\115\58\47\47\103\105\115\116\46\103\105\116\104\117\98\117\115\101\114\99\111\110\116\101\110\116\46\99\111\109\47\109\101\111\122\111\110\101\89\84\47\98\102\48\51\55\100\102\102\57\102\48\97\55\48\48\49\55\51\48\52\100\100\100\54\55\102\100\99\100\51\55\48\47\114\97\119\47\101\49\52\101\55\52\102\52\50\53\98\48\54\48\100\102\53\50\51\51\52\51\99\102\51\48\98\55\56\55\48\55\52\101\98\51\99\53\100\50\47\97\114\99\101\117\115\37\50\53\50\48\120\37\50\53\50\48\102\108\121\37\50\53\50\48\50\37\50\53\50\48\111\98\102\108\117\99\97\116\111\114\39\41\44\116\114\117\101\41\41\40\41\10\10")()
-  	end    
+local Button = GuiTab:CreateButton({
+   Name = "Lightux",
+   Interact = 'Click',
+   Callback = function()
+        loadstring(game:HttpGet(('https://raw.githubusercontent.com/cool83birdcarfly02six/Lightux/main/README.md'),true))() 
+   end,
 })
 
---[[
-Name = <string> - The name of the button.
-Callback = <function> - The function of the button.
-]]
-
-MainTab:AddButton({
-	Name = "jaunko",
-	Callback = function()
-      		loadstring(game:HttpGet("https://raw.githubusercontent.com/Juanko-Scripts/Roblox-scripts/main/obf_Aap505JEHIsk17sO35Bk3LZ8d5snZew1oZNGx562xEUCHStdgQl3e122qkC0HR3a.lua.txt"))()
-  	end    
+local Button = GuiTab:CreateButton({
+   Name = "Game pass",
+   Interact = 'Click',
+   Callback = function()
+        loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-free-gamepass-or-dev-products-12996"))()
+   end,
 })
 
---[[
-Name = <string> - The name of the button.
-Callback = <function> - The function of the button.
-]]
-
-MainTab:AddButton({
-	Name = "yarhma hub",
-	Callback = function()
-      		loadstring(game:HttpGet("https://raw.githubusercontent.com/Joystickplays/psychic-octo-invention/main/yarhm.lua", false))()
-  	end    
+local Button = GuiTab:CreateButton({
+   Name = "GHub",
+   Interact = 'Click',
+   Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/gclich/GHUBV13S/main/GHUBv13S.txt"))() 
+   end,
 })
 
---[[
-Name = <string> - The name of the button.
-Callback = <function> - The function of the button.
-]]
-
-MainTab:AddButton({
-	Name = "ScriptHubV3 Too good",
-	Callback = function()
-      		loadstring(game:HttpGet("https://raw.githubusercontent.com/scripthubekitten/SCRIPTHUBV3/main/SCRIPTHUBV3", true))()
-  	end    
+local Button = GuiTab:CreateButton({
+   Name = "TbaohubPrisonLife",
+   Interact = 'Click',
+   Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/tbao143/thaibao/main/TbaohubPrisonLife"))() 
+   end,
 })
 
---[[
-Name = <string> - The name of the button.
-Callback = <function> - The function of the button.
-]]
-
-MainTab:AddButton({
-	Name = "personal made esp",
-	Callback = function()
-      		-- loadstring
-local ESP = loadstring(game:HttpGet("https://kiriot22.com/releases/ESP.lua"))()
- 
--- config
-ESP.Players = false
-ESP.Boxes = false
-ESP.Names = true
-ESP:Toggle(true)
- 
--- object
-ESP:AddObjectListener(Workspace .DynamicFurniture, {
-    Name = "ScrapPile",
-    CustomName = "scrap",
-    Color = Color3.fromRGB(0, 255, 0),
-    IsEnabled = "whatever"
-})
-ESP.whatever = true
-
-
-  	end    
+local Button = GuiTab:CreateButton({
+   Name = "TSBobfuscator",
+   Interact = 'Click',
+   Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Scripterbacon/TSBobfuscator/main/Main.Lua"))() 
+   end,
 })
 
---[[
-Name = <string> - The name of the button.
-Callback = <function> - The function of the button.
-]]
-
-MainTab:AddButton({
-	Name = "second esp",
-	Callback = function()
-      		-- loadstring
-local ESP = loadstring(game:HttpGet("https://kiriot22.com/releases/ESP.lua"))()
- 
--- config
-ESP.Players = false
-ESP.Boxes = false
-ESP.Names = true
-ESP:Toggle(true)
- 
--- object
-ESP:AddObjectListener(Workspace .DynamicFurniture, {
-    Name = "BottlePack",
-    CustomName = "bottlepack",
-    Color = Color3.fromRGB(0, 255, 0),
-    IsEnabled = "whatever"
-})
-ESP.whatever = true
-
-
-  	end    
+local Button = GuiTab:CreateButton({
+   Name = "fieldnew",
+   Interact = 'Click',
+   Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/LOLking123456/fieldnew/main/track"))() 
+   end,
 })
 
-MainTab:AddButton({
-	Name = "alwi hub (for pyro)",
-	Callback = function()
-      		loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-free-gamepass-or-dev-products-12996"))()
-  	end    
+local Button = GuiTab:CreateButton({
+   Name = "Juanko Hub",
+   Interact = 'Click',
+   Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Juanko-Scripts/Roblox-scripts/main/Juanko%20Universal%20Hub%20OfuscasteLinkServerFile73829273728288ejfjshsrytdoudt7do"))()
+   end,
 })
 
---[[
-Name = <string> - The name of the button.
-Callback = <function> - The function of the button.
-]]
+local Button = GuiTab:CreateButton({
+   Name = "PublicBathroomSimulator",
+   Interact = 'Click',
+   Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/ADSKerOffical/Budgie-Hub/main/PublicBathroomSimulator"))()
+   end,
+})
+
+local Button = GuiTab:CreateButton({
+   Name = "MVS",
+   Interact = 'Click',
+   Callback = function()
+         loadstring(game:HttpGet("https://pastebin.com/raw/4MvbLUwi"))()
+   end,
+})
+
+local Button = GuiTab:CreateButton({
+   Name = "daisuke1227",
+   Interact = 'Click',
+   Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/daisuke1227/iosexps/main/version2.1.02"))()
+   end,
+})
+
+local Button = GuiTab:CreateButton({
+   Name = "Yarhm",
+   Interact = 'Click',
+   Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Joystickplays/psychic-octo-invention/main/yarhm.lua", false))()
+   end,
+})
+
+local Button = GuiTab:CreateButton({
+   Name = "SCRIPTHUBV3",
+   Interact = 'Click',
+   Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/scripthubekitten/SCRIPTHUBV3/main/SCRIPTHUBV3", true))()
+   end,
+})
+
+local Button = GuiTab:CreateButton({
+   Name = "Crazy",
+   Interact = 'Click',
+   Callback = function()
+       loadstring(game:HttpGet(('https://raw.githubusercontent.com/BaconBossScript/Crazy/main/Crazy'),true))()
+   end,
+})
+
+local Button = GuiTab:CreateButton({
+   Name = "Blade ball",
+   Interact = 'Click',
+   Callback = function()
+       loadstring(Game:HttpGet("https://raw.githubusercontent.com/Fsploit/venox-blade-ball-v1/main/K-A-T-S-U-S-F-S-P-L-O-I-T-I-S-A-F-U-R-R-Y%20MAIN%20V4"))()
+   end,
+})
+
+local Button = GuiTab:CreateButton({
+   Name = "realtis hood testing",
+   Interact = 'Click',
+   Callback = function()
+       loadstring(game:HttpGet("https://pastebin.com/raw/bQE5Pb1G", true))()
+   end,
+})
+
+local Button = MadeTab:CreateButton({
+   Name = "The sewers esp",
+   Interact = 'Click',
+   Callback = function()
+       loadstring(game:HttpGet("https://raw.githubusercontent.com/emris1/Emrisfirstscript/main/The%20sewer%20scrap%20esp"))()
+   end,
+})
+
+local Button = MadeTab:CreateButton({
+   Name = "The sewers esp2 use both",
+   Interact = 'Click',
+   Callback = function()
+       loadstring(game:HttpGet("https://raw.githubusercontent.com/emris1/Emrisfirstscript/main/The%20sewers%20bottle%20pack%20esp"))()
+   end,
+})
+
+local Button = GuiTab:CreateButton({
+   Name = "redblue hub",
+   Interact = 'Click',
+   Callback = function()
+       loadstring(game:HttpGet("https://scriptblox.com/raw/Universal-Script-BlueRed-Hub-V17-15572"))()
+   end,
+})
+
+local Button = GuiTab:CreateButton({
+   Name = "Universal",
+   Interact = 'Click',
+   Callback = function()
+       loadstring(game:HttpGet("https://scriptblox.com/raw/Universal-Script-New-OP-16010"))()
+   end,
+})
+
+local Button = GuiTab:CreateButton({
+   Name = "Brookhaven",
+   Interact = 'Click',
+   Callback = function()
+       loadstring(game:HttpGet("https://raw.githubusercontent.com/IceMael7/NewIceHub/main/Brookhaven"))()
+   end,
+})
+
+local Button = GuiTab:CreateButton({
+   Name = "Apollo?",
+   Interact = 'Click',
+   Callback = function()
+       loadstring(game:HttpGet("https://raw.githubusercontent.com/10x00/Public-Cracks/main/Apollo%20Hub%20Crack.lua"))()
+   end,
+})
+
+local Button = GuiTab:CreateButton({
+   Name = "Scarlet Script",
+   Interact = 'Click',
+   Callback = function()
+       loadstring(game:HttpGet("https://pastecode.dev/raw/8TcNwKmv1t/script%20Scarlet%20v2"))()
+   end,
+})
+
+local Button = GuiTab:CreateButton({
+   Name = "Slap_Battles",
+   Interact = 'Click',
+   Callback = function()
+       loadstring(game:HttpGet("https://raw.githubusercontent.com/Giangplay/Slap_Battles/main/Slap_Battles.lua"))()
+   end,
+})
 
